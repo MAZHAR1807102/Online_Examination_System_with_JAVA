@@ -1,0 +1,314 @@
+package onlineExaminationSystem;
+
+import java.awt.BorderLayout;
+import Connect.ConnectionProvider;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FlowLayout;
+import java.awt.CardLayout;
+import javax.swing.border.MatteBorder;
+
+import com.mysql.cj.protocol.Resultset;
+
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+
+public class QuestionSet<lblID> extends JFrame {
+	
+	Connection con = null;
+	PreparedStatement stmt = null;
+	ResultSet rs = null;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField txtques;
+	private JTextField txt1;
+	private JTextField txt2;
+	private JTextField txt3;
+	private JTextField txt4;
+	private JTextField txtans;
+	private JLabel lblQhead;
+	private JLabel lbltxtQN;
+	private JLabel lblQues;
+	private JPanel Panbg;
+	private JLabel lblOp1;
+	private JLabel lblOp2;
+	private JLabel lblOp3;
+	private JLabel lblOp4;
+	private JLabel lblAns;
+	private JButton btnAdd;
+	private JButton btnClear;
+	private JLabel Qno;
+	private JLabel lblNewLabel;
+
+	/**
+	 * Launch the application.
+	 */
+	public QuestionSet()
+	{
+		QuestionSet1();
+		
+		try {
+			con = ConnectionProvider.getcon();
+			Statement st = con.createStatement();
+		    ResultSet rs = st.executeQuery("select count(ID) from test");
+			if(rs.next())
+			{
+				int ID = rs.getInt(1);
+				ID = ID++;
+				@SuppressWarnings("unused")
+				String Str = String.valueOf(ID);
+				Qno.setText(Str);
+			}
+			else
+				Qno.setText("1");
+			
+		}catch(Exception e)
+		{
+			JFrame jf = new JFrame();
+			jf.setAlwaysOnTop(true);
+			JOptionPane.showMessageDialog(jf, e);
+		}
+	}
+	
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					QuestionSet frame = new QuestionSet();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+
+	/**
+	 * Create the frame.
+	 * @return 
+	 */
+	public void QuestionSet1() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 900, 700);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+	    lblQhead = new JLabel("Question");
+		lblQhead.setFont(new Font("Rockwell", Font.BOLD, 46));
+		lblQhead.setForeground(new Color(255, 255, 255));
+		lblQhead.setBounds(342, 24, 228, 59);
+		contentPane.add(lblQhead);
+		
+		lbltxtQN = new JLabel("Qeustion No:");
+		lbltxtQN.setFont(new Font("Arial", Font.BOLD, 14));
+		lbltxtQN.setBounds(27, 87, 98, 25);
+		contentPane.add(lbltxtQN);
+		
+		lblQues = new JLabel("Question: ");
+		lblQues.setFont(new Font("Arial Black", Font.BOLD, 16));
+		lblQues.setBounds(27, 122, 110, 33);
+		contentPane.add(lblQues);
+		
+		Panbg = new JPanel();
+		Panbg.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		Panbg.setBackground(new Color(255, 255, 255));
+		Panbg.setBounds(80, 194, 747, 385);
+		contentPane.add(Panbg);
+		Panbg.setLayout(null);
+		
+		lblOp1 = new JLabel("Option1");
+		lblOp1.setFont(new Font("Rokkitt", Font.BOLD, 20));
+		lblOp1.setBounds(47, 41, 85, 42);
+		Panbg.add(lblOp1);
+		
+		lblOp2 = new JLabel("Option2");
+		lblOp2.setFont(new Font("Rokkitt", Font.BOLD, 20));
+		lblOp2.setBounds(47, 101, 85, 42);
+		Panbg.add(lblOp2);
+		
+		lblOp3 = new JLabel("Option3");
+		lblOp3.setFont(new Font("Rokkitt", Font.BOLD, 20));
+		lblOp3.setBounds(47, 168, 85, 42);
+		Panbg.add(lblOp3);
+		
+	    lblOp4 = new JLabel("Option4");
+		lblOp4.setFont(new Font("Rokkitt", Font.BOLD, 20));
+		lblOp4.setBounds(47, 233, 85, 42);
+		Panbg.add(lblOp4);
+		
+		lblAns = new JLabel("Answer");
+		lblAns.setFont(new Font("Rokkitt", Font.BOLD, 20));
+		lblAns.setBounds(47, 317, 85, 13);
+		Panbg.add(lblAns);
+		
+		txt1 = new JTextField();
+		txt1.setBounds(153, 41, 517, 42);
+		Panbg.add(txt1);
+		txt1.setColumns(10);
+		
+		txt2 = new JTextField();
+		txt2.setColumns(10);
+		txt2.setBounds(153, 101, 517, 42);
+		Panbg.add(txt2);
+		
+		txt3 = new JTextField();
+		txt3.setColumns(10);
+		txt3.setBounds(153, 168, 517, 42);
+		Panbg.add(txt3);
+		
+		txt4 = new JTextField();
+		txt4.setColumns(10);
+		txt4.setBounds(153, 235, 517, 42);
+		Panbg.add(txt4);
+		
+		txtans = new JTextField();
+		txtans.setColumns(10);
+		txtans.setBounds(153, 304, 517, 42);
+		Panbg.add(txtans);
+		
+		txtques = new JTextField();
+		txtques.setFont(new Font("Arial", Font.PLAIN, 12));
+		txtques.setBounds(124, 122, 669, 46);
+		contentPane.add(txtques);
+		txtques.setColumns(10);
+		
+		btnAdd = new JButton("ADD");
+		btnAdd.setIcon(new ImageIcon("G:\\java project\\Online Examination System\\image\\Next.png"));
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnAdd.addActionListener(new ActionListener() {
+					@SuppressWarnings("rawtypes")
+					public void actionPerformed(ActionEvent e) {
+						
+						
+						String QN = Qno.getText();
+						String stques = txtques.getText();
+						String stOp1 = txt1.getText();
+						String stOp2 = txt2.getText();
+						String stOp3 = txt3.getText();
+						String stOp4 = txt4.getText();
+						String stans = txtans.getText();
+						
+						try {
+							Class.forName("com.mysql.jdbc.Driver");
+							con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login", "root", "");
+							stmt = con.prepareStatement("insert into test"+"(ID,question, Option1, Option2, Option3, Option4, answer)"+"values(?,?,?,?,?,?,?)");
+							stmt.setString(1, QN);
+							stmt.setString(2, stques);
+							stmt.setString(3, stOp1);
+							stmt.setString(4, stOp2);
+							stmt.setString(5, stOp3);
+							stmt.setString(6, stOp4);
+							stmt.setString(7, stans);
+							
+							int k = stmt.executeUpdate();
+							if(k== 0)
+							{
+								JOptionPane.showMessageDialog(btnAdd, "This is already exists");
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(btnAdd, "Qeustion Set is successfully created");
+								
+								QuestionSet.this.dispose();
+								QuestionSet qs = new QuestionSet();
+								qs.setVisible(true);
+							}
+							
+						
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+				
+			}
+		});
+		btnAdd.setBackground(new Color(255, 0, 0));
+		btnAdd.setForeground(new Color(255, 255, 255));
+		btnAdd.setFont(new Font("Arial", Font.BOLD, 20));
+		btnAdd.setBorder(null);
+		btnAdd.setBounds(124, 606, 110, 46);
+		contentPane.add(btnAdd);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation",JOptionPane.YES_NO_OPTION ) == 0)
+					adminPanel.open = 0;
+				adminPanel ap = new adminPanel();
+				ap.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnCancel.setForeground(Color.WHITE);
+		btnCancel.setFont(new Font("Arial", Font.BOLD, 20));
+		btnCancel.setBorder(null);
+		btnCancel.setBackground(Color.RED);
+		btnCancel.setBounds(681, 606, 110, 46);
+		contentPane.add(btnCancel);
+		
+	    btnClear = new JButton("CLEAR");
+	    btnClear.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		txtques.setText("");
+				txt1.setText("");
+				txt2.setText("");
+				txt3.setText("");
+				txt4.setText("");
+				txtans.setText("");
+				
+	    	}
+	    });
+		btnClear.setForeground(Color.WHITE);
+		btnClear.setFont(new Font("Arial", Font.BOLD, 20));
+		btnClear.setBorder(null);
+		btnClear.setBackground(Color.RED);
+		btnClear.setBounds(270, 606, 110, 46);
+		contentPane.add(btnClear);
+		
+	    Qno = new JLabel("00");
+	    Qno.setForeground(new Color(255, 255, 255));
+		Qno.setFont(new Font("Arial Black", Font.BOLD, 16));
+		Qno.setBounds(135, 87, 54, 25);
+		contentPane.add(Qno);
+		
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\HP\\Downloads\\luke-chesser-pJadQetzTkI-unsplash.jpg"));
+		lblNewLabel.setBounds(-12, -15, 1027, 780);
+		contentPane.add(lblNewLabel);
+		
+		/*txtQN = new JTextField();
+		txtQN.setBounds(124, 91, 96, 19);
+		contentPane.add(txtQN);
+		txtQN.setColumns(10);*/
+		setUndecorated(true);
+		setLocationRelativeTo(null);
+	}
+}

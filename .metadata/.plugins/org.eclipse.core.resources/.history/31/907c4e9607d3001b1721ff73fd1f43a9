@@ -1,0 +1,258 @@
+package onlineExaminationSystem;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import Connect.ConnectionProvider;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Font;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import Connect.ConnectionProvider;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class writtensript extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField script;
+	private JTextField mark;
+	public String qId = "0";
+	private JLabel ques;
+	private JLabel qno;
+	private JLabel lblNewLabel_4;
+	private JLabel name;
+	private String Roll;
+	private JLabel roll;
+
+	/**
+	 * Launch the application.
+	 */ public void question()
+		{
+	    	//JOptionPane.showMessageDialog(null,qId);
+			int Qid1 = Integer.parseInt(qId);
+			Qid1 = Qid1+1;
+			qId = String.valueOf(Qid1);
+			//JOptionPane.showMessageDialog(null,qId);
+			try {
+				Connection con = ConnectionProvider.getcon();
+				Statement st = con.createStatement();
+				ResultSet rs1 = st.executeQuery("select *from written1 where ID ='"+qId+"'");
+				while(rs1.next())
+				{
+					qno.setText(rs1.getString(1));
+					ques.setText(rs1.getString(2));
+					
+
+				}
+				
+			}catch(Exception ex)
+			{
+				
+			}
+		}
+	
+	
+	
+	writtensript()
+	{
+		
+		
+		 writtensript1();
+		qId = "0";
+		
+		
+		//Display first question
+		try {
+			Connection con = ConnectionProvider.getcon();
+			Statement st = con.createStatement();
+			
+			ResultSet rs1 = st.executeQuery("select *from script1 where ID ='"+qId+"'");
+			while(rs1.next())
+			{
+				qno.setText(rs1.getString(1));
+				ques.setText(rs1.getString(3));
+				script.setText(rs1.getString(4));
+			    Roll = rs1.getString(2);
+				//JOptionPane.showMessageDialog(null, Roll);
+				
+				
+			}
+			ResultSet rs = st.executeQuery("select *from student where Roll = '"+Roll+"'");
+			while(rs.next())
+			{
+				name.setText(rs.getString(2));
+				roll.setText(Roll);
+			}
+			
+		}catch(Exception ex)
+		{
+			
+		}
+	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					writtensript frame = new writtensript();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	
+	
+	
+
+	/**
+	 * Create the frame.
+	 */
+	public void writtensript1() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 900, 700);
+		contentPane = new JPanel();
+		contentPane.setBorder(null);
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel_1 = new JLabel("Script");
+		lblNewLabel_1.setFont(new Font("Rockwell", Font.PLAIN, 46));
+		lblNewLabel_1.setForeground(new Color(0, 0, 0));
+		lblNewLabel_1.setBounds(343, 29, 239, 86);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel = new JLabel("Name :");
+		lblNewLabel.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		lblNewLabel.setBounds(52, 148, 79, 25);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Roll :");
+		lblNewLabel_2.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		lblNewLabel_2.setBounds(52, 210, 87, 25);
+		contentPane.add(lblNewLabel_2);
+		
+		ques = new JLabel("Question ");
+		ques.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		ques.setBounds(107, 272, 146, 25);
+		contentPane.add(ques);
+		
+		script = new JTextField();
+		script.setBounds(98, 354, 685, 244);
+		contentPane.add(script);
+		script.setColumns(10);
+		
+		JLabel lblNewLabel_3_1 = new JLabel("Answer");
+		lblNewLabel_3_1.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		lblNewLabel_3_1.setBounds(388, 319, 87, 25);
+		contentPane.add(lblNewLabel_3_1);
+		
+		JLabel lblNewLabel_3_2 = new JLabel("Marks : ");
+		lblNewLabel_3_2.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		lblNewLabel_3_2.setBounds(581, 210, 79, 32);
+		contentPane.add(lblNewLabel_3_2);
+		
+		qno = new JLabel("00");
+		qno.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		qno.setBounds(66, 272, 31, 25);
+		contentPane.add(qno);
+		
+		mark = new JTextField();
+		mark.setBounds(661, 210, 36, 32);
+		contentPane.add(mark);
+		mark.setColumns(10);
+		
+		lblNewLabel_4 = new JLabel("/ 10");
+		lblNewLabel_4.setFont(new Font("Rockwell", Font.BOLD, 22));
+		lblNewLabel_4.setBounds(707, 210, 45, 32);
+		contentPane.add(lblNewLabel_4);
+		
+	    name = new JLabel("");
+		name.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		name.setBounds(141, 148, 79, 25);
+		contentPane.add(name);
+		
+		roll = new JLabel("");
+		roll.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		roll.setBounds(141, 210, 79, 25);
+		contentPane.add(roll);
+		
+		JButton btnNewButton = new JButton("NEXT");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			String m = mark.getText();
+				try{  
+					Connection con = ConnectionProvider.getcon();
+					PreparedStatement st = con.prepareStatement("Update script1 set Marks = ? where ID = '"+qId+"'");
+					st.setString(1, m);
+					if(st.executeUpdate()==1)
+					{
+						JOptionPane.showMessageDialog(null, "Successsfully Added");
+						question();
+						//setVisible(false);
+					
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, " Unsuccessfull");
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		btnNewButton.setBackground(new Color(255, 0, 0));
+		btnNewButton.setForeground(Color.WHITE);
+		btnNewButton.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		btnNewButton.setBorder(null);
+		btnNewButton.setIcon(new ImageIcon("G:\\JavaProject2\\Next.png"));
+		btnNewButton.setBounds(111, 619, 109, 42);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("CANCEL");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adminPanel ap = new adminPanel();
+				ap.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnNewButton_1.setForeground(Color.WHITE);
+		btnNewButton_1.setFont(new Font("Rokkitt", Font.BOLD, 22));
+		btnNewButton_1.setBorder(null);
+		btnNewButton_1.setBackground(Color.RED);
+		btnNewButton_1.setBounds(661, 619, 109, 42);
+		contentPane.add(btnNewButton_1);
+		
+		JLabel lbl = new JLabel("");
+		lbl.setIcon(new ImageIcon("C:\\Users\\HP\\Downloads\\luke-chesser-pJadQetzTkI-unsplash.jpg"));
+		lbl.setBorder(null);
+		lbl.setBounds(0, 0, 900, 700);
+		contentPane.add(lbl);
+		
+	
+		
+		
+		
+		
+		setUndecorated(true);
+		setLocationRelativeTo(null);
+	}
+}

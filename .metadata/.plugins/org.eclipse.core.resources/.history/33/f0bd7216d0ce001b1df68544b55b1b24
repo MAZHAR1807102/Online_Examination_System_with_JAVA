@@ -1,0 +1,188 @@
+package onlineExaminationSystem;
+
+import java.awt.BorderLayout;
+
+import java.awt.EventQueue;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.border.LineBorder;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Dashboard extends JFrame {
+
+private JPanel contentPane;
+	public String Pass;
+public Dashboard(String pass)
+	{
+		Dashboard1();
+		Pass = pass;
+		//JOptionPane.showMessageDialog(null, pass);
+		
+		
+	}
+public Dashboard()
+{
+	Dashboard1();
+}
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Dashboard frame = new Dashboard();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 * @return 
+	 */
+	public void Dashboard1() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 900, 700);
+
+		
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 128, 128));
+		contentPane.setBorder(new LineBorder(new Color(25, 25, 112), 3));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panMcq = new JPanel();
+		panMcq.setBounds(229, 0, 254, 106);
+		contentPane.add(panMcq);
+		panMcq.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panMcq.setBackground(new Color(0, 128, 128));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panMcq.setBackground(new Color(47, 79, 79));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Test tst = new Test(Pass);
+				tst.setVisible(true);
+				Dashboard.this.dispose();
+			}
+		});
+		panMcq.setBorder(null);
+		panMcq.setBackground(new Color(47, 79, 79));
+		panMcq.setForeground(new Color(0, 128, 128));
+		panMcq.setLayout(null);
+		
+		JLabel lblMcqExam = new JLabel("MCQ EXAM");
+		lblMcqExam.setForeground(Color.WHITE);
+		lblMcqExam.setFont(new Font("Space Ranger Title", Font.PLAIN, 36));
+		lblMcqExam.setBounds(0, 10, 248, 86);
+		panMcq.add(lblMcqExam);
+		
+		JPanel panWExam = new JPanel();
+		panWExam.setBounds(482, 0, 299, 106);
+		contentPane.add(panWExam);
+		panWExam.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panWExam.setBackground(new Color(0, 128, 128));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panWExam.setBackground(new Color(47, 79, 79));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				WrittenTest wr = new WrittenTest(Pass);
+				wr.setVisible(true);
+				
+			}
+		});
+		panWExam.setBorder(null);
+		panWExam.setBackground(new Color(47, 79, 79));
+		panWExam.setForeground(new Color(0, 128, 128));
+		panWExam.setLayout(null);
+		
+		JLabel lblWrittenExam = new JLabel("WRITTEN EXAM");
+		lblWrittenExam.setForeground(Color.WHITE);
+		lblWrittenExam.setFont(new Font("Space Ranger Title", Font.PLAIN, 28));
+		lblWrittenExam.setBounds(10, 30, 278, 43);
+		panWExam.add(lblWrittenExam);
+		
+		JPanel panprfl = new JPanel();
+		panprfl.setBounds(0, 0, 231, 106);
+		contentPane.add(panprfl);
+		panprfl.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panprfl.setBackground(new Color(0, 128, 128));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panprfl.setBackground(new Color(47, 79, 79));
+			}
+		});
+		panprfl.setBorder(null);
+		panprfl.setBackground(new Color(47, 79, 79));
+		panprfl.setForeground(new Color(0, 128, 128));
+		panprfl.setLayout(null);
+		
+		JLabel lblProfile = new JLabel("PROFILE");
+		lblProfile.setForeground(Color.WHITE);
+		lblProfile.setFont(new Font("Space Ranger Title", Font.PLAIN, 36));
+		lblProfile.setBounds(10, 31, 221, 43);
+		panprfl.add(lblProfile);
+		JButton btnNewButton = new JButton("");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
+		btnNewButton.setIcon(new ImageIcon("G:\\JavaProject2\\Close.png"));
+		btnNewButton.setBounds(780, 0, 120, 106);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("LOGOUT");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Are you Sure?","select",JOptionPane.YES_NO_OPTION);
+				login lt = new login();
+				setVisible(false);
+				lt.setVisible(true);
+				
+			}
+		});
+		btnNewButton_1.setIcon(new ImageIcon("G:\\JavaProject2\\Logout.png"));
+		btnNewButton_1.setFont(new Font("Space Ranger Title", Font.BOLD, 30));
+		btnNewButton_1.setBounds(268, 216, 275, 82);
+		contentPane.add(btnNewButton_1);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("G:\\JavaProject2\\index background.png"));
+		lblNewLabel.setBounds(-17, 0, 942, 719);
+		contentPane.add(lblNewLabel);
+		
+	
+		
+		setLocationRelativeTo(null);
+		setUndecorated(true);
+	}
+}

@@ -1,0 +1,587 @@
+package onlineExaminationSystem;
+
+import java.awt.BorderLayout;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicButtonListener;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.ActiveEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
+import java.awt.FlowLayout;
+import javax.swing.ImageIcon;
+import Connect.ConnectionProvider;
+import java.util.*;
+import java.util.Date;
+import java.util.Timer;
+
+import java.text.DecimalFormat;
+
+import javax.swing.*;
+
+public class Test extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 291237741488133047L;
+	private JPanel contentPane;
+	public String pass;
+	public String qId;
+	public String Question;
+	public int mint = 0;
+	public int secd = 0;
+	public int marks = 0;
+	public String ans;
+	
+	
+	
+	public void answerCheck()
+	{
+		String givenAns;
+		if(RbtnOP1.isSelected())
+		{
+			givenAns = RbtnOP1.getText();
+		}
+		else if(RbtnOp2.isSelected())
+		{
+			givenAns = RbtnOp2.getText();
+		}
+		else if(RbtnOp3.isSelected())
+		{
+			givenAns = RbtnOp3.getText();
+		}
+		else 
+		{
+			givenAns = RbtnOp4.getText();
+		}
+		if(givenAns.equals(ans))	
+		{
+			marks = marks + 1;
+			String mark = String.valueOf(marks);
+			lblmarks.setText(mark);
+		}
+		else
+		{
+			String ST = "Write Answer is : " + ans;
+			JOptionPane.showMessageDialog(null, ST);
+		}
+		int Qid1 = Integer.parseInt(qId);
+		Qid1 = Qid1+1;
+		qId = String.valueOf(Qid1);
+		
+		RbtnOP1.setSelected(false);
+		RbtnOp2.setSelected(false);
+		RbtnOp3.setSelected(false);
+		RbtnOp4.setSelected(false);
+		
+		if(qId.equals("10"))
+		{
+			btnNext.setVisible(false);
+		}
+	}
+	
+	
+	public void question()
+	{
+		try {
+			Connection con = ConnectionProvider.getcon();
+			Statement st = con.createStatement();
+			ResultSet rs1 = st.executeQuery("select *from test where ID ='"+qId+"'");
+			while(rs1.next())
+			{
+				QuestionId.setText(rs1.getString(1));
+				lblques.setText(rs1.getString(2));
+				RbtnOP1.setText(rs1.getString(3));
+				RbtnOp2.setText(rs1.getString(4));
+				RbtnOp3.setText(rs1.getString(5));
+				RbtnOp4.setText(rs1.getString(6));
+			//	RbtnOp2.setText(rs1.getString(7));
+				ans = rs1.getString(7);
+
+			}
+			
+		}catch(Exception ex)
+		{
+			
+		}
+	}
+	
+	public void submit()
+	{
+		String roll = YourRoll.getText();
+		//JOptionPane.showMessageDialog(null, roll);
+		//answerCheck();
+		try {
+			Connection con = ConnectionProvider.getcon();
+			Statement st = con.createStatement();
+			st.executeUpdate("update student set marks = '"+marks+"' where Roll = '"+roll+"'");
+			String mark = String.valueOf(marks);
+			
+			//JOptionPane.showMessageDialog(null, marks);
+			
+			String M = "Your marks is: " + mark;
+			JOptionPane.showMessageDialog(null,M);
+		}catch(Exception ex1) {
+			
+		}
+	}
+public Test(String Pass)	
+{
+//JOptionPane.showMessageDialog(null, Pass);
+Test1();
+	pass = Pass;
+	qId = "0";
+	
+	SimpleDateFormat dform = new SimpleDateFormat("dd-mm-yyyy");
+	Date date = new Date();
+	lblDate.setText(dform.format(date));
+	
+	//Display first question
+	try {
+		Connection con = ConnectionProvider.getcon();
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery("select *from student where Password ='"+pass+"'");
+		while(rs.next())
+		{
+			yourNm.setText(rs.getString(2));
+			YourRoll.setText(rs.getString(1));
+			YourBatch.setText(rs.getString(5));
+			Hall.setText(rs.getString(6));
+			Dept.setText(rs.getString(4));
+			
+			//JOptionPane.showMessageDialog(null, rs.getString(2));
+			
+		}
+		ResultSet rs1 = st.executeQuery("select *from test where ID ='"+qId+"'");
+		while(rs1.next())
+		{
+			QuestionId.setText(rs1.getString(1));
+			lblques.setText(rs1.getString(2));
+			RbtnOP1.setText(rs1.getString(3));
+			RbtnOp2.setText(rs1.getString(4));
+			RbtnOp3.setText(rs1.getString(5));
+			RbtnOp4.setText(rs1.getString(6));
+		//	RbtnOp2.setText(rs1.getString(7));
+			ans = rs1.getString(7);
+
+		}
+		
+	}catch(Exception ex)
+	{
+		
+	}
+	timer();
+	setLocationRelativeTo(this);
+	
+
+}
+
+
+static int second = 00;
+    static int minute = 05;
+    static String ddSecond, ddMinute;
+    static DecimalFormat dFormat = new DecimalFormat("00");
+    static boolean state = true; 
+
+public void timer(){
+    state = true;
+        Thread t = new Thread(){
+          public void run(){
+              for(;;){
+                  if(state == true){
+                      try{
+                          sleep(1000);
+                          second--;
+                          ddSecond = dFormat.format(second);
+                          ddMinute = dFormat.format(minute);
+                          min.setText(""+ddMinute);
+                          sec.setText(""+ddSecond);
+                          if(second == -1){
+                              second = 59;
+                              minute--;
+                              ddSecond = dFormat.format(second);
+                              ddMinute = dFormat.format(minute);
+                              min.setText(""+ddMinute);
+                              sec.setText(""+ddSecond);
+                          }
+                          if(minute == 0 && second == 0){
+                              state = false;
+                             JOptionPane.showMessageDialog(null,"Stop Writting!! Times Up!");
+                             submit();
+                              setVisible(false);
+                          }
+                      }
+                      catch(Exception e){
+                        e.printStackTrace();
+                      }
+                  }
+                  else{
+                      break;
+                  }
+              }
+          }  
+        };
+        t.start();
+    }
+
+
+public Test()
+{
+	Test1();
+	//connect();
+	//Getvalue();
+}
+	Statement stmt;
+	Connection con;
+	ResultSet rs;
+	String Corr = null;
+	private JLabel QuestionId;
+	private JButton btnCancel;
+	private JLabel lblmarks;
+	private JLabel YourBatch;
+	private JLabel Hall;
+	private JLabel Dept;
+	private JLabel YourRoll;
+	private JLabel yourNm;
+	private JButton btnNext;
+	private JButton btnSub;
+	private JLabel lblques;
+	private JLabel min;
+	private JLabel sec;
+	private JLabel lblDate;
+	private JRadioButton RbtnOp2;
+	private JRadioButton RbtnOP1;
+	private JRadioButton RbtnOp3;
+	private JRadioButton RbtnOp4;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_4;
+	/*public void connect()
+	{
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login", "root", "");
+			
+		}catch(ClassNotFoundException e) {
+			Logger.getLogger(Registration.class.getName()).log(Level.SEVERE,null, e);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}*/
+	
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Test frame = new Test();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 * @return 
+	 */
+	public void Test1() {
+		
+			 
+		
+		
+		
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 900, 700);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblHead = new JLabel("MCQ Test");
+		lblHead.setBounds(309, 31, 247, 66);
+		lblHead.setFont(new Font("Space Ranger Laser", Font.BOLD, 44));
+		lblHead.setForeground(new Color(255, 0, 0));
+		contentPane.add(lblHead);
+		
+		lblques = new JLabel("Question");
+		lblques.setBounds(327, 107, 501, 85);
+		lblques.setFont(new Font("Arial", Font.BOLD, 20));
+		contentPane.add(lblques);
+		
+		JPanel panBg = new JPanel();
+		panBg.setBackground(new Color(0, 139, 139));
+		panBg.setBounds(362, 196, 489, 401);
+		contentPane.add(panBg);
+		panBg.setLayout(null);
+		
+		RbtnOp2 = new JRadioButton("Option 2");
+		RbtnOp2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(RbtnOp2.isSelected())
+				{
+					RbtnOP1.setSelected(false);
+					RbtnOp3.setSelected(false);
+					RbtnOp4.setSelected(false);
+				}
+			}
+		});
+		RbtnOp2.setFont(new Font("Arial", Font.PLAIN, 16));
+		RbtnOp2.setBounds(29, 131, 440, 44);
+		panBg.add(RbtnOp2);
+		
+		RbtnOP1 = new JRadioButton("Option 1");
+		RbtnOP1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(RbtnOP1.isSelected())
+				{
+					RbtnOp2.setSelected(false);
+					RbtnOp3.setSelected(false);
+					RbtnOp4.setSelected(false);
+				}
+			}
+		});
+		RbtnOP1.setFont(new Font("Arial", Font.PLAIN, 16));
+		RbtnOP1.setBounds(29, 57, 440, 44);
+		panBg.add(RbtnOP1);
+		
+		RbtnOp3 = new JRadioButton("Option 3");
+		RbtnOp3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(RbtnOp3.isSelected())
+				{
+					RbtnOP1.setSelected(false);
+					RbtnOp2.setSelected(false);
+					RbtnOp4.setSelected(false);
+				}
+			}
+		});
+		RbtnOp3.setFont(new Font("Arial", Font.PLAIN, 16));
+		RbtnOp3.setBounds(29, 203, 440, 44);
+		panBg.add(RbtnOp3);
+		
+		RbtnOp4 = new JRadioButton("Option 4");
+		RbtnOp4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(RbtnOp4.isSelected())
+				{
+					RbtnOP1.setSelected(false);
+					RbtnOp3.setSelected(false);
+					RbtnOp2.setSelected(false);
+				}
+			}
+		});
+		RbtnOp4.setFont(new Font("Arial", Font.PLAIN, 16));
+		RbtnOp4.setBounds(29, 279, 440, 44);
+		panBg.add(RbtnOp4);
+		
+	    btnSub = new JButton("Submit");
+	    btnSub.setIcon(new ImageIcon("G:\\JavaProject2\\save.png"));
+	    btnSub.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		int a = JOptionPane.showConfirmDialog(null, "Do you really want to submit","select",JOptionPane.YES_NO_OPTION);
+	    		if(a==0)
+	    		{
+	    			//answerCheck();
+	    			submit();
+	    			Dashboard db = new Dashboard();
+	    			db.setVisible(true);
+	    			setVisible(false);
+	    		}
+	    	}
+	    });
+		btnSub.setBorder(null);
+		btnSub.setBackground(new Color(211, 211, 211));
+		btnSub.setFont(new Font("Serif", Font.BOLD, 20));
+		btnSub.setForeground(new Color(255, 0, 0));
+		btnSub.setBounds(641, 621, 128, 42);
+		contentPane.add(btnSub);
+		ButtonGroup Options = new ButtonGroup();
+		Options.add(RbtnOP1);
+		Options.add(RbtnOp2);
+		Options.add(RbtnOp3);
+		Options.add(RbtnOp4);
+		
+		//JLabel lblQno = new JLabel("");
+		//lblQno.setBounds(758, 156, 45, 13);
+		//contentPane.add(lblQno);
+		
+	    QuestionId = new JLabel("00");
+		QuestionId.setFont(new Font("Tahoma", Font.BOLD, 20));
+		QuestionId.setBounds(174, 102, 26, 42);
+		contentPane.add(QuestionId);
+		
+		JLabel lblNewLabel_1 = new JLabel("Total Time : 10 min");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1.setBounds(675, 58, 142, 20);
+		contentPane.add(lblNewLabel_1);
+		
+		btnNext = new JButton("Next");
+		btnNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				answerCheck();
+				question();
+			}
+		});
+		btnNext.setIcon(new ImageIcon("G:\\JavaProject2\\Next.png"));
+		btnNext.setForeground(Color.RED);
+		btnNext.setFont(new Font("Serif", Font.BOLD, 20));
+		btnNext.setBorder(null);
+		btnNext.setBackground(new Color(211, 211, 211));
+		btnNext.setBounds(108, 621, 128, 42);
+		contentPane.add(btnNext);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(0, 139, 139));
+		panel.setBounds(48, 196, 291, 401);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel_2 = new JLabel("Name: ");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setFont(new Font("Rokkitt SemiBold", Font.BOLD, 20));
+		lblNewLabel_2.setBounds(20, 52, 63, 34);
+		panel.add(lblNewLabel_2);
+		
+		yourNm = new JLabel("Your Name");
+		yourNm.setFont(new Font("Space Ranger", Font.PLAIN, 20));
+		yourNm.setForeground(new Color(255, 255, 255));
+		yourNm.setBounds(98, 53, 172, 34);
+		panel.add(yourNm);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("Roll: ");
+		lblNewLabel_2_1.setForeground(Color.WHITE);
+		lblNewLabel_2_1.setFont(new Font("Rokkitt SemiBold", Font.BOLD, 20));
+		lblNewLabel_2_1.setBounds(20, 107, 54, 34);
+		panel.add(lblNewLabel_2_1);
+		
+		JLabel lblNewLabel_2_2 = new JLabel("Dept:");
+		lblNewLabel_2_2.setForeground(Color.WHITE);
+		lblNewLabel_2_2.setFont(new Font("Rokkitt SemiBold", Font.BOLD, 20));
+		lblNewLabel_2_2.setBounds(20, 236, 63, 34);
+		panel.add(lblNewLabel_2_2);
+		
+		JLabel lblNewLabel_2_3 = new JLabel("Hall:");
+		lblNewLabel_2_3.setForeground(Color.WHITE);
+		lblNewLabel_2_3.setFont(new Font("Rokkitt SemiBold", Font.BOLD, 20));
+		lblNewLabel_2_3.setBounds(20, 294, 54, 34);
+		panel.add(lblNewLabel_2_3);
+		
+		YourRoll = new JLabel("0000");
+		YourRoll.setForeground(Color.WHITE);
+		YourRoll.setFont(new Font("Space Ranger", Font.PLAIN, 20));
+		YourRoll.setBounds(98, 107, 172, 34);
+		panel.add(YourRoll);
+		
+		Dept = new JLabel("Your Dept");
+		Dept.setForeground(Color.WHITE);
+		Dept.setFont(new Font("Space Ranger", Font.PLAIN, 20));
+		Dept.setBounds(93, 236, 172, 34);
+		panel.add(Dept);
+		
+		Hall = new JLabel("Your Hall");
+		Hall.setForeground(Color.WHITE);
+		Hall.setFont(new Font("Space Ranger", Font.PLAIN, 20));
+		Hall.setBounds(93, 294, 172, 34);
+		panel.add(Hall);
+		
+		JLabel lblNewLabel_2_1_1 = new JLabel("Batch:");
+		lblNewLabel_2_1_1.setForeground(Color.WHITE);
+		lblNewLabel_2_1_1.setFont(new Font("Rokkitt SemiBold", Font.BOLD, 20));
+		lblNewLabel_2_1_1.setBounds(20, 173, 63, 34);
+		panel.add(lblNewLabel_2_1_1);
+		
+		YourBatch = new JLabel("2018");
+		YourBatch.setForeground(Color.WHITE);
+		YourBatch.setFont(new Font("Space Ranger", Font.PLAIN, 20));
+		YourBatch.setBounds(98, 173, 172, 34);
+		panel.add(YourBatch);
+				
+						
+						lblmarks = new JLabel("00");
+						lblmarks.setBounds(124, 154, 58, 24);
+						contentPane.add(lblmarks);
+						lblmarks.setFont(new Font("Arial", Font.BOLD, 20));
+						lblmarks.setForeground(new Color(0, 100, 0));
+						
+						btnCancel = new JButton("Cancel");
+						btnCancel.setIcon(new ImageIcon("G:\\JavaProject2\\Back.png"));
+						btnCancel.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								
+								Dashboard ds = new Dashboard();
+								ds.setVisible(true);
+								setVisible(false);
+										
+							}
+						});
+						btnCancel.setForeground(Color.RED);
+						btnCancel.setFont(new Font("Serif", Font.BOLD, 20));
+						btnCancel.setBorder(null);
+						btnCancel.setBackground(new Color(211, 211, 211));
+						btnCancel.setBounds(265, 621, 128, 42);
+						contentPane.add(btnCancel);
+						
+						JLabel lblNewLabel_1_1 = new JLabel("Time :");
+						lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+						lblNewLabel_1_1.setBounds(674, 88, 47, 20);
+						contentPane.add(lblNewLabel_1_1);
+						
+						min = new JLabel("00");
+						min.setFont(new Font("Tahoma", Font.PLAIN, 16));
+						min.setBounds(731, 88, 27, 20);
+						contentPane.add(min);
+						
+						sec = new JLabel("00");
+						sec.setFont(new Font("Tahoma", Font.PLAIN, 16));
+						sec.setBounds(756, 88, 18, 20);
+						contentPane.add(sec);
+						
+						lblDate = new JLabel("Date:");
+						lblDate.setFont(new Font("Tahoma", Font.BOLD, 16));
+						lblDate.setBounds(676, 35, 140, 13);
+						contentPane.add(lblDate);
+						
+						lblNewLabel_3 = new JLabel("Marks:");
+						lblNewLabel_3.setFont(new Font("Space Ranger Academy", Font.PLAIN, 20));
+						lblNewLabel_3.setBounds(38, 150, 80, 30);
+						contentPane.add(lblNewLabel_3);
+						
+						lblNewLabel = new JLabel("Question ID :");
+						lblNewLabel.setFont(new Font("Space Ranger Academy", Font.PLAIN, 20));
+						lblNewLabel.setBounds(38, 107, 142, 30);
+						contentPane.add(lblNewLabel);
+						
+						lblNewLabel_4 = new JLabel("");
+						lblNewLabel_4.setIcon(new ImageIcon("C:\\Users\\HP\\Desktop\\my website\\images.jpg"));
+						lblNewLabel_4.setBounds(-92, -42, 1057, 843);
+						contentPane.add(lblNewLabel_4);
+		setUndecorated(true);
+		setLocationRelativeTo(null);
+		}
+	}
+

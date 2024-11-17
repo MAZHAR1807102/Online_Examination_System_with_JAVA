@@ -1,0 +1,262 @@
+package onlineExaminationSystem;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JTextField;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
+
+public class Registration extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField txtName;
+	private JTextField txtRoll;
+	private JTextField txtDept;
+	private JTextField txtbatch;
+	private JTextField txthall;
+	private JPasswordField PassField;
+	
+/*	Connection con;
+	PreparedStatement stmt;
+	
+	
+	public void Connect() {
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login", "root", "");
+			
+		}catch(ClassNotFoundException e) {
+			Logger.getLogger(Registration.class.getName()).log(Level.SEVERE,null, e);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	*/
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Registration frame = new Registration();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	/**
+	 * Create the frame.
+	 */
+	public Registration() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 900, 700);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 139, 139));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblUsername = new JLabel("Username");
+		lblUsername.setForeground(new Color(255, 255, 255));
+		lblUsername.setFont(new Font("Rockwell", Font.BOLD, 26));
+		lblUsername.setBounds(438, 179, 147, 37);
+		contentPane.add(lblUsername);
+		
+		JLabel lblRoll = new JLabel("Roll");
+		lblRoll.setForeground(new Color(0, 0, 128));
+		lblRoll.setFont(new Font("Arial Black", Font.BOLD, 18));
+		lblRoll.setBounds(438, 236, 110, 37);
+		contentPane.add(lblRoll);
+		
+		JLabel lbldept = new JLabel("Deptartment");
+		lbldept.setForeground(new Color(0, 0, 128));
+		lbldept.setFont(new Font("Arial Black", Font.BOLD, 18));
+		lbldept.setBounds(438, 297, 131, 37);
+		contentPane.add(lbldept);
+		
+		JLabel batch = new JLabel("Batch");
+		batch.setForeground(new Color(0, 0, 128));
+		batch.setFont(new Font("Arial Black", Font.BOLD, 18));
+		batch.setBounds(438, 354, 110, 37);
+		contentPane.add(batch);
+		
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setForeground(new Color(0, 0, 128));
+		lblPassword.setFont(new Font("Arial Black", Font.BOLD, 18));
+		lblPassword.setBounds(438, 421, 110, 37);
+		contentPane.add(lblPassword);
+		
+		
+		JLabel lblNewLabel_1_3 = new JLabel("Hall");
+		lblNewLabel_1_3.setForeground(new Color(30, 144, 255));
+		lblNewLabel_1_3.setFont(new Font("Arial Black", Font.BOLD, 18));
+		lblNewLabel_1_3.setBounds(438, 487, 110, 37);
+		contentPane.add(lblNewLabel_1_3);
+		
+		txtName = new JTextField();
+		txtName.setBounds(631, 182, 175, 37);
+		contentPane.add(txtName);
+		txtName.setColumns(10);
+		
+		txtRoll = new JTextField();
+		txtRoll.setColumns(10);
+		txtRoll.setBounds(631, 239, 175, 37);
+		contentPane.add(txtRoll);
+		
+		txtDept = new JTextField();
+		txtDept.setColumns(10);
+		txtDept.setBounds(631, 300, 175, 37);
+		contentPane.add(txtDept);
+		
+		txtbatch = new JTextField();
+		txtbatch.setColumns(10);
+		txtbatch.setBounds(631, 357, 175, 37);
+		contentPane.add(txtbatch);
+
+		PassField = new JPasswordField();
+		PassField.setBounds(631, 424, 175, 37);
+		contentPane.add(PassField);
+		
+		txthall = new JTextField();
+		txthall.setColumns(10);
+		txthall.setBounds(631, 490, 175, 37);
+		contentPane.add(txthall);
+		
+		JButton btnAdd = new JButton("add");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unused")
+				String stname = txtName.getText();
+				String stroll = txtRoll.getText();
+				String stDept = txtDept.getText();
+				String stbatch = txtbatch.getText();
+				@SuppressWarnings("deprecation")
+				String stPass = PassField.getText();
+				String stHall = txthall.getText();
+				
+				try {
+					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/login", "root", "");
+					String query = "INSERT INTO student values('"+stroll+"', '"+stname+"', '"+stPass+"', '"+stDept+"', '"+stbatch+"', '"+stHall+"')";
+					Statement sta = con.createStatement();
+					int x = sta.executeUpdate(query);
+					if(x == 0)
+					{
+						JOptionPane.showMessageDialog(btnAdd, "This is already exists");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(btnAdd, "Your account is successfully created");
+						login log = new login();
+						log.setVisible(true);
+						Registration.this.dispose();
+					}
+				}catch(Exception Ex) {
+					Ex.printStackTrace();
+				}
+						
+				
+			}
+		});
+		btnAdd.setBackground(new Color(47, 79, 79));
+		btnAdd.setFont(new Font("Arial Black", Font.BOLD, 14));
+		btnAdd.setBounds(659, 574, 124, 31);
+		contentPane.add(btnAdd);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(47, 79, 79));
+		panel_1.setBounds(499, 574, 110, 31);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel exit = new JLabel("CANCEL");
+		exit.setBounds(31, 0, 69, 31);
+		panel_1.add(exit);
+		exit.setForeground(new Color(255, 255, 255));
+		exit.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+		exit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation",JOptionPane.YES_NO_OPTION ) == 0)
+				{
+					login log = new login();
+					log.setVisible(true);
+					Registration.this.dispose();
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			exit.setForeground(Color.red);
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				exit.setForeground(Color.white);
+			}
+		});
+		exit.setFont(new Font("Arial Black", Font.BOLD, 12));
+		exit.setForeground(new Color(255, 255, 255));
+		
+		JLabel lblTxtReg = new JLabel("REGISTRATION");
+		lblTxtReg.setForeground(new Color(255, 255, 255));
+		lblTxtReg.setBounds(449, 59, 370, 128);
+		contentPane.add(lblTxtReg);
+		lblTxtReg.setFont(new Font("Space Ranger Bold", Font.BOLD, 50));
+		/*ImageIcon  ico = new ImageIcon(this.getClass().getResource("/reg.png"));
+		Image img = ico.getImage();
+		Image scaled = img.getScaledInstance(lblTxtReg.getWidth(),lblTxtReg.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon icon = new ImageIcon(scaled);
+		lblTxtReg.setIcon(icon);*/
+		
+		JLabel lblbg = new JLabel("New label");
+		lblbg.setBounds(-225, 0, 1245, 735);
+		contentPane.add(lblbg);
+		ImageIcon  ico1 = new ImageIcon(this.getClass().getResource("/register.png"));
+		Image img1 = ico1.getImage();
+		Image scaled1 = img1.getScaledInstance(lblbg.getWidth(),lblbg.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon icon1 = new ImageIcon(scaled1);
+		lblbg.setIcon(icon1);
+		
+		
+		
+		
+		setUndecorated(true);
+		setLocationRelativeTo(null);
+	}
+}
